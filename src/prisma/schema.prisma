@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model CM_Output {
+  TradDt      DateTime @db.Date
+  FinInstrmId Int
+  TckrSymb    String   @db.VarChar(10)
+  SctySrs     String?  @db.VarChar(10)
+  OpnPric     Decimal? @db.Decimal(10, 2)
+  HghPric     Decimal? @db.Decimal(10, 2)
+  LwPric      Decimal? @db.Decimal(10, 2)
+  ClsPric     Decimal? @db.Decimal(10, 2)
+  TtlTradgVol Int?
+
+  @@id([TradDt, FinInstrmId, TckrSymb])
+}
+
+model FnO_Output {
+  TradDt       DateTime  @db.Date
+  FinInstrmTp  String?   @db.VarChar(50)
+  FinInstrmId  Int
+  TckrSymb     String    @db.VarChar(10)
+  XpryDt       DateTime? @db.Date
+  StrkPric     Decimal?  @db.Decimal(10, 2)
+  OptnTp       String?   @db.VarChar(10)
+  FinInstrmNm  String?   @db.VarChar(100)
+  OpnPric      Decimal?  @db.Decimal(10, 2)
+  HghPric      Decimal?  @db.Decimal(10, 2)
+  LwPric       Decimal?  @db.Decimal(10, 2)
+  ClsPric      Decimal?  @db.Decimal(10, 2)
+  OpnIntrst    BigInt?
+  NewBrdLotQty Int?
+
+  @@id([TradDt, FinInstrmId, TckrSymb])
+}
