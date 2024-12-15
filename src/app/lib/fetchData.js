@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 // Utility function to serialize Prisma data (handling Decimal and Date)
 function serializeData(data) {
