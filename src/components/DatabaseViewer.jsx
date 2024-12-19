@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -20,6 +21,15 @@ import { Input } from "@/components/ui/input";
 import { getData } from "@/app/lib/fetchData"; // Import the server-side action
 
 export default function DatabaseViewer() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated !== "true") {
+      router.push("/login");
+    }
+  }, [router]);
+
   const [tables] = useState(["Table1", "Table2"]);
   const [selectedTable, setSelectedTable] = useState("");
   const [tableData, setTableData] = useState([]);
