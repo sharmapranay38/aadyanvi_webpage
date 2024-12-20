@@ -30,7 +30,7 @@ export default function DatabaseViewer() {
     }
   }, [router]);
 
-  const [tables] = useState(["Table1", "Table2"]);
+  const [tables] = useState(["CM_Output", "FnO_Output"]);
   const [selectedTable, setSelectedTable] = useState("");
   const [tableData, setTableData] = useState([]);
   const [columns, setColumns] = useState([]);

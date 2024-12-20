@@ -27,12 +27,12 @@ export async function getData(tableName, page = 1, pageSize = 10) {
 
     // Dynamically fetch the data based on the table name
     let data;
-    if (tableName === "Table1") {
+    if (tableName === "CM_Output") {
       data = await prisma.cM_Output.findMany({
         skip,
         take: pageSize,
       });
-    } else if (tableName === "Table2") {
+    } else if (tableName === "FnO_Output") {
       data = await prisma.fnO_Output.findMany({
         skip,
         take: pageSize,
@@ -46,7 +46,7 @@ export async function getData(tableName, page = 1, pageSize = 10) {
 
     // Count total rows for pagination (optional, for total pages calculation)
     const totalRows =
-      tableName === "Table1"
+      tableName === "CM_Output"
         ? await prisma.cM_Output.count()
         : await prisma.fnO_Output.count();
 
