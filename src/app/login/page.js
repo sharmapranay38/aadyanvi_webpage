@@ -16,6 +16,8 @@ export default function LoginPage() {
     const correctUsername = process.env.NEXT_PUBLIC_USERNAME;
     const correctPassword = process.env.NEXT_PUBLIC_PASSWORD;
 
+    console.log(username, password);
+
     if (username === correctUsername && password === correctPassword) {
       localStorage.setItem("isAuthenticated", true);
       router.push("/");
