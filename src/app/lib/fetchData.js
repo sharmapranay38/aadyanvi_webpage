@@ -9,7 +9,7 @@ function serializeData(data) {
     Object.keys(item).forEach((key) => {
       const value = item[key];
       if (value instanceof Date) {
-        serializedItem[key] = value.toISOString();
+        serializedItem[key] = value.toISOString().split("T")[0];
       } else if (value && value.toNumber) {
         serializedItem[key] = value.toNumber();
       } else {
