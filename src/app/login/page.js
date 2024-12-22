@@ -13,8 +13,8 @@ export default function LoginPage() {
 
   const signIn = (e) => {
     e.preventDefault();
-    const correctUsername = process.env.NEXT_PUBLIC_USERNAME;
-    const correctPassword = process.env.NEXT_PUBLIC_PASSWORD;
+    const correctUsername = "aadyanvi@user";
+    const correctPassword = "pass@123";
 
     if (username === correctUsername && password === correctPassword) {
       localStorage.setItem("isAuthenticated", true);
