@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model CM_Output {
+model cm_output {
   TradDt      DateTime @db.Date
   FinInstrmId Int
   TckrSymb    String   @db.VarChar(10)
