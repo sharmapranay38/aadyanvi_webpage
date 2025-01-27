@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { json2csv } from "json-2-csv";
 import { collectSegments } from "next/dist/build/segment-config/app/app-segments";
 
 // Utility function to serialize Prisma data (handling Decimal and Date)
@@ -78,6 +79,55 @@ export async function filterData(
     };
   } catch (error) {
     console.error("Error fetching paginated data:", error);
+    throw new Error("Failed to fetch data");
+  }
+}
+
+export async function downloadFilterData(date, symbol, tableName) {
+  try {
+    const whereClause = {};
+
+    // Only add filters if they're not empty
+    if (date) whereClause.TradDt = { equals: new Date(date) };
+    if (symbol) whereClause.TckrSymb = { equals: symbol };
+
+    // Dynamically fetch the data based on the table name
+    let data;
+    if (tableName === "CM_Output") {
+      data = await prisma.cm_output.findMany({
+        where: whereClause,
+      });
+    } else if (tableName === "FnO_Output") {
+      data = await prisma.fnO_Output.findMany({
+        where: whereClause,
+      });
+    } else {
+      throw new Error("Invalid table name");
+    }
+
+    // Serialize the data before returning it to the client
+    const serializedData = serializeData(data);
+
+    // Count total rows for pagination (optional, for total pages calculation)
+    const totalRows =
+      tableName === "CM_Output"
+        ? await prisma.cm_output.aggregate({
+            where: whereClause,
+            _count: true,
+          })
+        : await prisma.fnO_Output.aggregate({
+            where: whereClause,
+            _count: true,
+          });
+
+    console.log(totalRows);
+
+    return {
+      data: serializedData,
+      totalRows: totalRows._count,
+    };
+  } catch (error) {
+    console.error("Error fetching download data:", error);
     throw new Error("Failed to fetch data");
   }
 }

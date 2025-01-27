@@ -20,7 +20,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { filterData } from "@/app/lib/filterData"; // Import the filterData function
+import { filterData, downloadFilterData } from "@/app/lib/filterData"; // Import the filterData function
+import { Parser } from "json2csv";
 
 export default function DatabaseViewer() {
   const router = useRouter();
@@ -46,6 +47,48 @@ export default function DatabaseViewer() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(50); // Number of rows per page
   const [totalRows, setTotalRows] = useState(0);
+
+  const downloadCsv = async () => {
+    try {
+      console.log("Starting download...");
+
+      // Fetch ALL data with current filters
+      const { data } = await downloadFilterData(
+        filterDate || undefined,
+        filterSymbol || undefined,
+        selectedTable
+      );
+
+      if (!data || data.length === 0) {
+        console.log("No data to download");
+        return;
+      }
+
+      // console.log("Downloading CSV data:", data);
+
+      // Create CSV with BOM for Excel compatibility
+      const parser = new Parser();
+      const csvContent = parser.parse(data);
+      const bom = "\uFEFF";
+      const blob = new Blob([bom + csvContent], {
+        type: "text/csv;charset=utf-8;",
+      });
+
+      // Create and trigger download
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${selectedTable}_data.csv`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
 
   const handleResetFilters = async () => {
     setFilterDate("");
@@ -194,6 +237,7 @@ export default function DatabaseViewer() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm"
         />
+        <Button onClick={downloadCsv}>Download</Button>
       </div>
       {selectedTable && (
         <>
